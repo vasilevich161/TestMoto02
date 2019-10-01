@@ -11,25 +11,39 @@ namespace TestMoto02
 
     class CalculiatorTOKA
     {
-        //  public CalculiatorTOKA() { }
-        public String CalculiatorT(String strWat, String strVolt, String strCosф, String kpd)
+        public String CalculiatorT(String strWat, String strVolt, String strCosф, String Strkpd)
         {
-            double valWAT, valCosф, valKPD, valTOK, valVOLT;
-            String strTok = "";
-            if (strWat != string.Empty && strCosф != string.Empty && kpd != string.Empty && strVolt != string.Empty)//если все поля заполнены 
-            {
-                valWAT  =  ConvertorNoSimvol(strWat);
-                valCosф =  ConvertorNoSimvol(strCosф);
-                valKPD  =  ConvertorNoSimvol(kpd);
-                valVOLT =  ConvertorNoSimvol(strVolt);
-                //  Iном = P /√3Ucosφη=   P /1.73Ucosφη=   //формула
-                valTOK = (valWAT * 100000) / (1.73 * valVOLT * valCosф * valKPD);// считаем
-                valTOK = Math.Ceiling(valTOK);// округляем
-                strTok = Convert.ToString(valTOK);
-            }
-            return strTok;
-        }
+            bool test = true; String strTok = "";
+            String[] arrayStr = { strWat, strVolt, strCosф, Strkpd };
+            double[] arrayVal = new double[4];
 
+            for (byte i = 0; i < 4; i++)
+            {
+                if (arrayStr[i] == string.Empty)
+                {
+                    test = false; break;//если пусто 
+                }
+                else
+                {
+                    arrayVal[i] = ConvertorNoSimvol(arrayStr[i]);
+                    if (arrayVal[i] == 0)
+                    {
+                        test = false; break;//если в данные равны 0, то выходим.
+                    }
+                }
+            }
+            if (test)
+            {//  Iном = P /√3Ucosφη=   P /1.73Ucosφη=   //формула
+                double valTOK = Math.Ceiling((arrayVal[0] * 100000) / (arrayVal[1] * arrayVal[2] * arrayVal[3]));
+                strTok = Convert.ToString(valTOK);
+                return strTok;
+            }
+            else
+            {
+                return "Некорректные данные";
+            }
+        }     
+          
         double ConvertorNoSimvol(string str1)
         {
             string str = str1;
